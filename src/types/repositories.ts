@@ -83,7 +83,7 @@ export interface RepositoriesResponse {
 }
 
 export interface Filters {
-  language: string | string[]
+  language?: string | string[]
   minStars: number
   fromDate?: Date
   toDate?: Date

@@ -9,7 +9,7 @@ export const useRepositories = defineStore('repositories', {
     loadingMore: {} as Record<string, boolean>,
     error: null as { message: string; code: number } | null,
     filters: {
-      language: [''] as string[],
+      language: undefined as string[] | undefined,
       fromDate: new Date(),
       toDate: new Date(),
       minStars: 0,

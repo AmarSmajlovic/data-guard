@@ -2,12 +2,12 @@
   <v-card>
     <v-card-title>Filters</v-card-title>
     <v-card-text>
-      <v-combobox
+      <v-select
         v-model="store.filters.language"
         :items="languageOptions"
         label="Select languages"
         multiple
-        clearable
+        closable-chips
         chips
         variant="solo"
       />
@@ -23,7 +23,6 @@
         label="With at least"
         type="number"
         variant="solo"
-        append-inner-icon="mdi-star"
         :min="0"
       />
       <v-btn block class="flex-1" variant="tonal" @click="applyFilters"
