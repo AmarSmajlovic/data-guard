@@ -1,8 +1,8 @@
 <template>
-  <v-card class="mb-4">
+  <v-card class="mb-4 card-with-fade">
     <v-card-title>{{ props.language }}</v-card-title>
     <v-card-text
-      style="max-height: 400px; overflow-y: auto"
+      class="scrollable-content"
       @scroll="handleScroll"
       :class="`scrollable-${props.language}`"
     >
@@ -39,4 +39,26 @@ const handleScroll = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.card-with-fade {
+  position: relative;
+  overflow: hidden;
+}
+
+.scrollable-content {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.card-with-fade::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+  pointer-events: none;
+}
+</style>

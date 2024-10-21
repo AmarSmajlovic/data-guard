@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100vh">
+  <v-card>
     <v-card-title>GitHub repositories</v-card-title>
     <v-card-text>
       <v-row>
@@ -9,7 +9,7 @@
               <v-skeleton-loader type="card" height="300"></v-skeleton-loader>
               <v-skeleton-loader
                 type="paragraph"
-                height="178"
+                height="150"
               ></v-skeleton-loader>
             </v-card>
           </v-col>

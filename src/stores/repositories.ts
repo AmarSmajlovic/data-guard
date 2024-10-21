@@ -10,8 +10,8 @@ export const useRepositories = defineStore('repositories', {
     error: null as { message: string; code: number } | null,
     filters: {
       language: undefined as string[] | undefined,
-      fromDate: new Date(),
-      toDate: new Date(),
+      fromDate: undefined,
+      toDate: undefined,
       minStars: 0,
     },
     pages: {

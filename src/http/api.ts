@@ -19,11 +19,7 @@ export const fetchRepositories = async (
 
   const { language, minStars, toDate, fromDate } = filters
 
-  const queryParts: string[] = []
-
-  if (minStars) {
-    queryParts.push(`stars:>=${minStars}`)
-  }
+  const queryParts: string[] = [`stars:>=${minStars}`]
 
   if (language) {
     queryParts.push(`language:${language}`)
@@ -45,7 +41,7 @@ export const fetchRepositories = async (
 
   try {
     const response = await fetch(
-      `${api}?q=${encodeURIComponent(query)}&page=${page}&per_page=30`,
+      `${api}?q=${encodeURIComponent(query)}&sort=stars&order=desc&page=${page}&per_page=30`,
     )
     if (!response.ok) throw new Error('Something went wrong, please try again.')
 
