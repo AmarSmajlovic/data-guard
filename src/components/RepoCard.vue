@@ -55,6 +55,7 @@
 <script setup lang="ts">
 import { checkIfStarred } from '@/http/github'
 import { useGitHubStore } from '@/stores/github'
+import { useRepositories } from '@/stores/repositories'
 import type { Repository } from '@/types/repositories'
 import { ref } from 'vue'
 
@@ -63,6 +64,7 @@ const props = defineProps<{
 }>()
 
 const githubStore = useGitHubStore()
+const repositoriesStore = useRepositories()
 const starCount = ref(props.repo.stargazers_count)
 const isAnimating = ref(false)
 const snackbar = ref({
@@ -75,18 +77,31 @@ const handleStarClick = async () => {
     props.repo.full_name,
     githubStore.accessToken,
   )
+
   if (isStarred) {
     snackbar.value.isOpen = true
-    return (snackbar.value.message = 'You already starred this repo.')
+    snackbar.value.message = 'You already starred this repo.'
+    return
   }
+
   await githubStore.starRepo(props.repo.full_name)
   starCount.value++
   isAnimating.value = true
+
   setTimeout(() => {
     isAnimating.value = false
   }, 300)
+
   snackbar.value.isOpen = true
-  return (snackbar.value.message = `Congrats! You starred the ${props.repo.name} repo`)
+  snackbar.value.message = `Congrats! You starred the ${props.repo.name} repo`
+
+  const repoToUpdate = repositoriesStore.repositories.find(
+    repo => repo.id === props.repo.id,
+  )
+
+  if (repoToUpdate) {
+    repoToUpdate.stargazers_count++
+  }
 }
 </script>
 
