@@ -19,6 +19,7 @@ import { useGitHubStore } from '@/stores/github'
 import { onMounted, watch } from 'vue'
 import { useRepositories } from '@/stores/repositories'
 import { getItemFromStorage, setItemToLocalStorage } from '@/utils/storage'
+import { getPlainStore } from '@/utils/repositories'
 
 const githubStore = useGitHubStore()
 const repositoryStore = useRepositories()
@@ -26,15 +27,7 @@ watch(
   () => repositoryStore,
   () => {
     if (repositoryStore) {
-      const plainStore = {
-        repositories: repositoryStore.repositories,
-        loading: repositoryStore.loading,
-        loadingMore: repositoryStore.loadingMore,
-        error: repositoryStore.error,
-        filters: repositoryStore.filters,
-        pages: repositoryStore.pages,
-        languageListScroll: repositoryStore.languageListScroll,
-      }
+      const plainStore = getPlainStore(repositoryStore)
 
       const serializedStore = JSON.stringify(plainStore)
       setItemToLocalStorage('repositoriesStore', serializedStore)
@@ -55,7 +48,6 @@ onMounted(() => {
 
   const initialStore = getItemFromStorage('repositoriesStore')
   if (initialStore) {
-    console.log(initialStore)
     const parsed = JSON.parse(initialStore)
     if (parsed.repositories) {
       repositoryStore.repositories = parsed.repositories

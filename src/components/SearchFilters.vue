@@ -74,7 +74,7 @@ watch(
 
 onMounted(() => {
   const initialStore = getItemFromStorage('repositoriesStore')
-  if (!initialStore) store.getRepositories()
+  if (!initialStore) store.getRepositories?.()
 })
 </script>
 

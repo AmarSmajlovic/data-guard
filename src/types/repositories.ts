@@ -83,8 +83,23 @@ export interface RepositoriesResponse {
 }
 
 export interface Filters {
-  language?: string | string[]
+  language?: string[]
   minStars: number
   fromDate?: Date
   toDate?: Date
+}
+
+export interface RepositoriesState {
+  repositories: Repository[]
+  loading: boolean
+  loadingMore: Record<string, boolean>
+  error: { message: string; code: number } | null
+  filters: Filters
+  pages: {
+    current: number
+    total: number
+  }
+  languageListScroll: Record<string, string | null>
+  loadMore?: (language: string) => void
+  getRepositories?: () => void
 }

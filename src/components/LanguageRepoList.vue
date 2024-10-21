@@ -53,7 +53,7 @@ const handleScroll = () => {
       }
     })
     if (scrollTop >= (scrollHeight - clientHeight) / 2) {
-      store.loadMore(props.language)
+      store.loadMore?.(props.language)
     }
   }
 }
