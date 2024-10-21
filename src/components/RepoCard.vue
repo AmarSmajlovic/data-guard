@@ -17,9 +17,17 @@
     </v-card-title>
 
     <v-card-subtitle>
-      <v-icon>mdi-star</v-icon>
-      {{ repo.stargazers_count }} Stars
+      <transition name="scale">
+        <v-icon
+          :class="{ 'gold-star': isAnimating }"
+          @click="handleStarClick"
+          v-if="starCount >= 0"
+          >mdi-star</v-icon
+        >
+      </transition>
+      {{ starCount }} Stars
     </v-card-subtitle>
+    <v-btn @click="handleStarClick">Add star</v-btn>
 
     <v-card-text>
       <p>{{ repo.description || 'No description provided.' }}</p>
@@ -33,17 +41,51 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { checkIfStarred } from '@/http/github'
+import { useGitHubStore } from '@/stores/github'
+import { useRepositories } from '@/stores/repositories'
 import type { Repository } from '@/types/repositories'
+import { ref } from 'vue'
 
-export default {
-  props: {
-    repo: {
-      type: Object as () => Repository,
-      required: true,
-    },
-  },
+const props = defineProps<{
+  repo: Repository
+}>()
+
+const githubStore = useGitHubStore()
+const repositoriesStore = useRepositories()
+const starCount = ref(props.repo.stargazers_count)
+const isAnimating = ref(false)
+
+const handleStarClick = async () => {
+  const isStarred = await checkIfStarred(
+    props.repo.full_name,
+    githubStore.accessToken,
+  )
+  if (isStarred) {
+    return alert('Already starred')
+  }
+  await githubStore.starRepo(props.repo.full_name, repositoriesStore.filters)
+  starCount.value++
+  isAnimating.value = true
+  setTimeout(() => {
+    isAnimating.value = false
+  }, 300)
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.gold-star {
+  color: gold;
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition: transform 0.3s;
+}
+
+.scale-enter,
+.scale-leave-to {
+  transform: scale(1.7);
+}
+</style>
