@@ -1,12 +1,18 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-list-item-avatar>
-        <v-img :src="repo.owner.avatar_url" alt="Owner Avatar" />
+      <v-list-item-avatar size="40">
+        <v-img
+          :src="repo.owner.avatar_url"
+          alt="Owner Avatar"
+          class="rounded-circle"
+        />
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title>{{ repo.name }}</v-list-item-title>
-        <v-list-item-subtitle> Repo ID: {{ repo.id }} </v-list-item-subtitle>
+        <v-list-item-subtitle>
+          Created on: {{ new Date(repo.created_at).toLocaleDateString() }}
+        </v-list-item-subtitle>
       </v-list-item-content>
     </v-card-title>
 
@@ -14,8 +20,15 @@
       <v-icon>mdi-star</v-icon>
       {{ repo.stargazers_count }} Stars
     </v-card-subtitle>
+
+    <v-card-text>
+      <p>{{ repo.description || 'No description provided.' }}</p>
+    </v-card-text>
+
     <v-card-actions>
-      <v-btn :href="repo.html_url" target="_blank"> View on GitHub </v-btn>
+      <v-btn :href="repo.html_url" target="_blank" toned color="primary">
+        View on GitHub
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -33,6 +46,4 @@ export default {
 }
 </script>
 
-<style scoped>
-/* Add your styles here if necessary */
-</style>
+<style scoped></style>

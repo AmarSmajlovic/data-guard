@@ -81,3 +81,10 @@ export interface RepositoriesResponse {
   incomplete_results: boolean
   items: Repository[]
 }
+
+export interface Filters {
+  language: string | string[]
+  minStars: number
+  fromDate?: Date
+  toDate?: Date
+}

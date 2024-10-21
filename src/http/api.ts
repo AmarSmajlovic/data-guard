@@ -1,26 +1,14 @@
-import type { RepositoriesResponse } from '@/types/repositories'
+import config from '@/config'
+import type { FetchResponse } from '@/types/client'
+import type { Filters, RepositoriesResponse } from '@/types/repositories'
 import { formatDate } from '@/utils/date'
-
-export interface FetchResponse<T> {
-  loading: boolean
-  data: T
-  error: { message: string; code: number } | null
-}
-
-export interface Filters {
-  language: string | string[]
-  minStars: number
-  fromDate: Date
-  toDate: Date
-}
 
 export const fetchRepositories = async (
   filters: Filters,
   page: number = 1,
 ): Promise<FetchResponse<RepositoriesResponse>> => {
-  const api = 'https://api.github.com/search/repositories'
+  const api = `${config.GITHUB_BASE_API_URL}/search/repositories`
 
-  // Initialize loading and error variables
   let loading = true
   let data: RepositoriesResponse = {
     total_count: 0,
@@ -31,33 +19,47 @@ export const fetchRepositories = async (
 
   const { language, minStars, toDate, fromDate } = filters
 
-  // Construct the query string based on filters
-  let query = `stars:>=${minStars} ${language ? `language:${language}` : ''}`
+  const queryParts: string[] = []
 
-  // Add date filters if specified, and ensure they're in YYYY-MM-DD format
-  if (fromDate) {
-    query += ` created:>=${formatDate(fromDate)}`
+  if (minStars) {
+    queryParts.push(`stars:>=${minStars}`)
   }
-  if (toDate) {
-    query += ` created:<=${formatDate(toDate)}`
+
+  if (language) {
+    queryParts.push(`language:${language}`)
   }
+
+  if (fromDate && toDate) {
+    const formattedFromDate = formatDate(fromDate)
+    const formattedToDate = formatDate(toDate)
+    queryParts.push(`created:${formattedFromDate}..${formattedToDate}`)
+  } else if (fromDate) {
+    const formattedFromDate = formatDate(fromDate)
+    queryParts.push(`created:>=${formattedFromDate}`)
+  } else if (toDate) {
+    const formattedToDate = formatDate(toDate)
+    queryParts.push(`created:<=${formattedToDate}`)
+  }
+
+  const query = queryParts.join(' ')
 
   try {
-    const response = await fetch(`${api}?q=${query}&page=${page}&per_page=30`)
-    if (!response.ok) throw new Error('Network response was not ok')
+    const response = await fetch(
+      `${api}?q=${encodeURIComponent(query)}&page=${page}&per_page=30`,
+    )
+    if (!response.ok) throw new Error('Something went wrong, please try again.')
 
     const result = await response.json()
-    data = result // Assume result.items contains the repositories
+    data = result
   } catch (err: unknown) {
     if (err instanceof Error) {
-      error = { message: err.message, code: 500 } // Customize error handling here
+      error = { message: err.message, code: 500 }
     } else {
       error = { message: 'Unknown error occurred', code: 500 }
     }
   } finally {
-    loading = false // Set loading to false when done
+    loading = false
   }
 
-  // Return the response with the loading state
   return { loading, data, error }
 }

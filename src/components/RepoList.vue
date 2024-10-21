@@ -1,28 +1,40 @@
 <template>
-  <v-card>
+  <v-card height="100vh">
     <v-card-title>GitHub repositories</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col
-          v-for="(repos, language) in repositories"
-          :key="language"
-          cols="12"
-          sm="4"
-        >
-          <v-card v-if="loading">
-            <v-skeleton-loader type="card" height="300"></v-skeleton-loader>
-            <v-skeleton-loader
-              type="paragraph"
-              height="178"
-            ></v-skeleton-loader>
-          </v-card>
+        <template v-if="loading">
+          <v-col v-for="n in 6" :key="n" cols="12" sm="4">
+            <v-card>
+              <v-skeleton-loader type="card" height="300"></v-skeleton-loader>
+              <v-skeleton-loader
+                type="paragraph"
+                height="178"
+              ></v-skeleton-loader>
+            </v-card>
+          </v-col>
+        </template>
 
-          <template v-else>
+        <template v-else>
+          <v-col
+            v-for="(repos, language) in repositories"
+            :key="language"
+            cols="12"
+            sm="4"
+          >
             <LanguageRepoList :language="language" :repositories="repos" />
-          </template>
-        </v-col>
+          </v-col>
+        </template>
       </v-row>
-      <p v-if="error">{{ error.message }}</p>
+
+      <v-container
+        fluid
+        v-if="error"
+        class="d-flex align-center justify-center"
+        style="height: 300px"
+      >
+        <div class="text-h5 text-center">Oops..! {{ error.message }}</div>
+      </v-container>
     </v-card-text>
   </v-card>
 </template>

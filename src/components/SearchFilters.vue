@@ -31,14 +31,19 @@
         v-model="filters.minStars"
         label="With at least"
         type="number"
+        variant="solo"
+        append-inner-icon="mdi-star"
+        :rules="[value => value >= 0 || 'Minimum value is 0']"
       />
-      <v-btn @click="applyFilters">Search selected filters</v-btn>
+      <v-btn block class="flex-1" variant="tonal" @click="applyFilters"
+        >Search selected filters</v-btn
+      >
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRepositories } from '@/stores/repositories'
 
 const store = useRepositories()
@@ -48,27 +53,26 @@ const selectedLanguages = ref<string[]>([])
 
 const filters = computed(() => store.filters)
 
-// Function to add language
 const addLanguage = () => {
-  const language = inputLanguage.value.trim() // Get the trimmed input value
+  const language = inputLanguage.value.trim()
   if (language && !selectedLanguages.value.includes(language)) {
-    selectedLanguages.value.push(language) // Add language if it's not already in the array
-    inputLanguage.value = '' // Clear the input field
+    selectedLanguages.value.push(language)
+    inputLanguage.value = ''
   }
 }
 
-// Function to remove a language
 const removeLanguage = (index: number) => {
-  selectedLanguages.value.splice(index, 1) // Remove language at the given index
+  selectedLanguages.value.splice(index, 1)
 }
 
-// Function to apply filters
 const applyFilters = () => {
-  store.filters.language = selectedLanguages.value // Update store with selected languages
-  store.getRepositories() // Fetch repositories based on filters
+  store.filters.language = selectedLanguages.value
+  store.getRepositories()
 }
+
+onMounted(() => {
+  store.getRepositories()
+})
 </script>
 
-<style>
-/* Optional custom styles can be added here */
-</style>
+<style></style>
