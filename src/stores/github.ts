@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAccessToken, starRepository } from '@/http/github'
-import type { Filters } from '@/types/repositories'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -17,12 +16,11 @@ export const useGitHubStore = defineStore('github', () => {
     }
   }
 
-  const starRepo = async (repoFullName: string, filters: Filters) => {
+  const starRepo = async (repoFullName: string) => {
     if (!accessToken.value) {
       const clientId = 'Ov23liu77XGEEac2QoSR'
       const redirectUri = `${window.location.origin}/api/github-auth`
-      const filterString = encodeURIComponent(JSON.stringify(filters))
-      const githubAuthorizeUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=repo&filters=${filterString}`
+      const githubAuthorizeUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=repo`
       return (window.location.href = githubAuthorizeUrl)
     }
 

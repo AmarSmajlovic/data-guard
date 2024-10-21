@@ -18,6 +18,7 @@ import RepoList from '@/components/RepoList.vue'
 import { useGitHubStore } from '@/stores/github'
 import { onMounted } from 'vue'
 import { useRepositories } from '@/stores/repositories'
+import { getItemFromStorage } from '@/utils/storage'
 
 const githubStore = useGitHubStore()
 const repositoryStore = useRepositories()
@@ -31,13 +32,18 @@ onMounted(() => {
     window.history.replaceState({}, document.title, window.location.pathname)
   }
 
-  const cookieFilters = document.cookie
-    .split('; ')
-    .find(row => row.startsWith('filters='))
-
-  if (cookieFilters) {
-    const filters = decodeURIComponent(cookieFilters.split('=')[1])
-    repositoryStore.filters = JSON.parse(filters)
+  const initialStore = getItemFromStorage('repositoriesStore')
+  if (initialStore) {
+    const parsed = JSON.parse(initialStore)
+    if (parsed.repositories) {
+      repositoryStore.repositories = parsed.repositories
+    }
+    if (parsed.filters) {
+      repositoryStore.filters = parsed.filters
+    }
+    if (parsed.languageListScroll) {
+      repositoryStore.languageListScroll = parsed.languageListScroll
+    }
   }
 })
 </script>

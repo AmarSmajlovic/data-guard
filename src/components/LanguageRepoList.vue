@@ -4,7 +4,7 @@
     <v-card-text
       class="scrollable-content"
       @scroll="handleScroll"
-      :class="`scrollable-${props.language}`"
+      :class="`scrollable-${sanitizeLanguage(props.language)}`"
     >
       <v-list>
         <v-list-item v-for="repo in props.repositories" :key="repo.id">
@@ -16,10 +16,12 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue'
+import { defineProps, onMounted } from 'vue'
 import RepoCard from '@/components/RepoCard.vue'
 import type { Repository } from '@/types/repositories'
 import { useRepositories } from '@/stores/repositories'
+import { sanitizeLanguage } from '@/utils/language'
+import { getItemFromStorage } from '@/utils/storage'
 
 const props = defineProps<{
   language: string
@@ -29,14 +31,35 @@ const props = defineProps<{
 const store = useRepositories()
 
 const handleScroll = () => {
-  const container = document.querySelector(`.scrollable-${props.language}`)
+  const container = document.querySelector(
+    `.scrollable-${sanitizeLanguage(props.language)}`,
+  )
   if (container) {
     const { scrollTop, scrollHeight, clientHeight } = container
+
+    store.languageListScroll[props.language] = scrollTop
+
     if (scrollTop >= (scrollHeight - clientHeight) / 2) {
       store.loadMore(props.language)
     }
   }
 }
+
+onMounted(() => {
+  const container = document.querySelector(
+    `.scrollable-${sanitizeLanguage(props.language)}`,
+  )
+
+  const initialStore = getItemFromStorage('repositoriesStore')
+  if (container && initialStore) {
+    const parsed = JSON.parse(initialStore)
+    const storedScrollPosition = parsed.languageListScroll[props.language]
+
+    if (storedScrollPosition) {
+      container.scrollTop = storedScrollPosition
+    }
+  }
+})
 </script>
 
 <style scoped>

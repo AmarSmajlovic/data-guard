@@ -3,7 +3,7 @@
     <v-card-title>Filters</v-card-title>
     <v-form ref="inputForm">
       <v-select
-        v-model="store.filters.language"
+        v-model="filters.language"
         :items="languageOptions"
         label="Select languages"
         multiple
@@ -40,7 +40,7 @@
         block
         class="flex-1"
         variant="tonal"
-        @click="applyFilters"
+        @click="store.getRepositories"
       >
         Search selected filters
       </v-btn>
@@ -55,6 +55,7 @@ import { languageOptions } from '@/constants'
 import { fromDateRule, toDateRule } from '@/validations/repoFilters'
 import type { VForm } from 'vuetify/components'
 import type { Filters } from '@/types/repositories'
+import { getItemFromStorage } from '@/utils/storage'
 
 const store = useRepositories()
 const filters = computed(() => store.filters)
@@ -71,12 +72,19 @@ watch(
   () => inputForm.value.validate(),
 )
 
-const applyFilters = () => {
-  store.getRepositories()
-}
+watch(
+  () => store,
+  () => {
+    localStorage.setItem('repositoriesStore', JSON.stringify(store))
+  },
+  {
+    deep: true,
+  },
+)
 
 onMounted(() => {
-  store.getRepositories()
+  const initialStore = getItemFromStorage('repositoriesStore')
+  if (!initialStore) store.getRepositories()
 })
 </script>
 
