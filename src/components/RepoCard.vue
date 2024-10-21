@@ -86,7 +86,7 @@ const handleStarClick = async () => {
     isAnimating.value = false
   }, 300)
   snackbar.value.isOpen = true
-  return (snackbar.value.message = ``)
+  return (snackbar.value.message = `Congrats! You starred the ${props.repo.name} repo`)
 }
 </script>
 
