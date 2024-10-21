@@ -7,8 +7,12 @@
       :class="`scrollable-${sanitizeLanguage(props.language)}`"
     >
       <v-list>
-        <v-list-item v-for="repo in props.repositories" :key="repo.id">
-          <RepoCard :repo="repo" />
+        <v-list-item
+          v-for="repo in props.repositories"
+          :key="repo.id"
+          :data-id="repo.id"
+        >
+          <RepoCard :repo="repo" :data-id="repo.id" />
         </v-list-item>
       </v-list>
     </v-card-text>
@@ -37,8 +41,17 @@ const handleScroll = () => {
   if (container) {
     const { scrollTop, scrollHeight, clientHeight } = container
 
-    store.languageListScroll[props.language] = scrollTop
-
+    const cards = container.querySelectorAll('.v-list-item')
+    const threshold = clientHeight / 2
+    cards.forEach(card => {
+      const cardRect = card.getBoundingClientRect()
+      if (cardRect.top >= 0 && cardRect.top <= threshold) {
+        const cardId = card.getAttribute('data-id')
+        if (cardId) {
+          store.languageListScroll[props.language] = cardId // Save the ID of the card
+        }
+      }
+    })
     if (scrollTop >= (scrollHeight - clientHeight) / 2) {
       store.loadMore(props.language)
     }
@@ -53,10 +66,13 @@ onMounted(() => {
   const initialStore = getItemFromStorage('repositoriesStore')
   if (container && initialStore) {
     const parsed = JSON.parse(initialStore)
-    const storedScrollPosition = parsed.languageListScroll[props.language]
+    const cardId = parsed.languageListScroll[props.language]
 
-    if (storedScrollPosition) {
-      container.scrollTop = storedScrollPosition
+    if (cardId) {
+      const card = container.querySelector(`[data-id="${cardId}"]`) // Find the card by ID
+      if (card) {
+        card.scrollIntoView({ behavior: 'instant', block: 'start' }) // Scroll to the card smoothly
+      }
     }
   }
 })

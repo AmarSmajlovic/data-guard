@@ -72,16 +72,6 @@ watch(
   () => inputForm.value.validate(),
 )
 
-watch(
-  () => store,
-  () => {
-    localStorage.setItem('repositoriesStore', JSON.stringify(store))
-  },
-  {
-    deep: true,
-  },
-)
-
 onMounted(() => {
   const initialStore = getItemFromStorage('repositoriesStore')
   if (!initialStore) store.getRepositories()

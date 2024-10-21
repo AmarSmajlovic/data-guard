@@ -16,12 +16,22 @@ import SearchFilters from '@/components/SearchFilters.vue'
 import RepoList from '@/components/RepoList.vue'
 
 import { useGitHubStore } from '@/stores/github'
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useRepositories } from '@/stores/repositories'
 import { getItemFromStorage } from '@/utils/storage'
 
 const githubStore = useGitHubStore()
 const repositoryStore = useRepositories()
+
+watch(
+  () => repositoryStore,
+  () => {
+    localStorage.setItem('repositoriesStore', JSON.stringify(repositoryStore))
+  },
+  {
+    deep: true,
+  },
+)
 
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search)
@@ -34,6 +44,7 @@ onMounted(() => {
 
   const initialStore = getItemFromStorage('repositoriesStore')
   if (initialStore) {
+    console.log(initialStore)
     const parsed = JSON.parse(initialStore)
     if (parsed.repositories) {
       repositoryStore.repositories = parsed.repositories

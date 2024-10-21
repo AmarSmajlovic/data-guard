@@ -18,7 +18,7 @@ export const useRepositories = defineStore('repositories', {
       current: 1,
       total: 0,
     },
-    languageListScroll: {} as Record<string, number>,
+    languageListScroll: {} as Record<string, string | null>,
   }),
   actions: {
     async getRepositories() {
