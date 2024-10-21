@@ -42,7 +42,7 @@
         variant="tonal"
         @click="store.getRepositories"
       >
-        Search selected filters
+        Search
       </v-btn>
     </v-form>
   </v-card>

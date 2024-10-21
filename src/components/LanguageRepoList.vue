@@ -53,6 +53,7 @@ const handleScroll = () => {
       }
     })
     if (scrollTop >= (scrollHeight - clientHeight) / 2) {
+      console.log('tu sam')
       store.loadMore?.(props.language)
     }
   }

@@ -1,7 +1,7 @@
 <template>
-  <v-card>
+  <v-card max-width="400px">
     <v-card-title>
-      <v-list-item-avatar size="40">
+      <v-list-item-avatar size="30" class="avatar-small">
         <v-img
           :src="repo.owner.avatar_url"
           alt="Owner Avatar"
@@ -16,7 +16,7 @@
       </v-list-item-content>
     </v-card-title>
 
-    <v-card-subtitle>
+    <v-card-subtitle class="d-flex justify-center">
       <transition name="scale">
         <v-icon
           :class="{ 'gold-star': isAnimating }"
@@ -25,20 +25,31 @@
           >mdi-star</v-icon
         >
       </transition>
-      {{ starCount }} Stars
+      <span class="mx-2">{{ starCount }} Stars</span>
     </v-card-subtitle>
-    <v-btn @click="handleStarClick">Add star</v-btn>
-
     <v-card-text>
       <p>{{ repo.description || 'No description provided.' }}</p>
     </v-card-text>
 
+    <v-card-subtitle class="d-flex justify-center">
+      <v-btn
+        @click="handleStarClick"
+        block
+        color="primary"
+        append-icon="mdi-star"
+        >Add star</v-btn
+      >
+    </v-card-subtitle>
     <v-card-actions>
-      <v-btn :href="repo.html_url" target="_blank" toned color="primary">
+      <v-btn :href="repo.html_url" target="_blank" block color="primary">
         View on GitHub
       </v-btn>
     </v-card-actions>
   </v-card>
+  <v-snackbar v-model="snackbar.isOpen" color="success">
+    {{ snackbar.message }}
+    <v-btn color="white" @click="snackbar.isOpen = false">Close</v-btn>
+  </v-snackbar>
 </template>
 
 <script setup lang="ts">
@@ -54,6 +65,10 @@ const props = defineProps<{
 const githubStore = useGitHubStore()
 const starCount = ref(props.repo.stargazers_count)
 const isAnimating = ref(false)
+const snackbar = ref({
+  isOpen: false,
+  message: '',
+})
 
 const handleStarClick = async () => {
   const isStarred = await checkIfStarred(
@@ -61,7 +76,8 @@ const handleStarClick = async () => {
     githubStore.accessToken,
   )
   if (isStarred) {
-    return alert('Already starred')
+    snackbar.value.isOpen = true
+    return (snackbar.value.message = 'You already starred this repo.')
   }
   await githubStore.starRepo(props.repo.full_name)
   starCount.value++
@@ -69,6 +85,8 @@ const handleStarClick = async () => {
   setTimeout(() => {
     isAnimating.value = false
   }, 300)
+  snackbar.value.isOpen = true
+  return (snackbar.value.message = ``)
 }
 </script>
 

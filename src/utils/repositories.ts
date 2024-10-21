@@ -13,14 +13,14 @@ export const mapRepositories = (repos: Repository[]) => {
     {} as Record<string, Repository[]>,
   )
 }
-export const getPlainStore = (store: RepositoriesState) => {
+export const getPlainStore = (store: RepositoriesState): RepositoriesState => {
   return {
     repositories: store.repositories,
     loading: store.loading,
     loadingMore: store.loadingMore,
     error: store.error,
     filters: store.filters,
-    pages: store.pages,
+    pages: { current: store.pages.current, total: store.pages.total },
     languageListScroll: store.languageListScroll,
   }
 }

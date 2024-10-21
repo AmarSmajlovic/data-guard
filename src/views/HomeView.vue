@@ -49,14 +49,8 @@ onMounted(() => {
   const initialStore = getItemFromStorage('repositoriesStore')
   if (initialStore) {
     const parsed = JSON.parse(initialStore)
-    if (parsed.repositories) {
-      repositoryStore.repositories = parsed.repositories
-    }
-    if (parsed.filters) {
-      repositoryStore.filters = parsed.filters
-    }
-    if (parsed.languageListScroll) {
-      repositoryStore.languageListScroll = parsed.languageListScroll
+    if (parsed) {
+      Object.assign(repositoryStore, parsed)
     }
   }
 })
