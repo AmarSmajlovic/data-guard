@@ -4,6 +4,8 @@ export default async function handler(req, res) {
   const { code } = req.query
   const clientId = process.env.VITE_GITHUB_CLIENT_ID
   const clientSecret = process.env.VITE_GITHUB_SECRET
+  const protocol = req.headers['x-forwarded-proto'] || 'http'
+  const origin = `${protocol}://${req.headers.host}`
 
   if (req.method === 'GET' && code) {
     try {
@@ -22,9 +24,7 @@ export default async function handler(req, res) {
         },
       )
 
-      res.redirect(
-        `${req.headers.referer}/?access_token=${response.data.access_token}`,
-      )
+      res.redirect(`${origin}/?access_token=${response.data.access_token}`)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
