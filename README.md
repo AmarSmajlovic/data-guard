@@ -1,61 +1,37 @@
-# vue-project
+# Project Name
 
-This template should help get you started developing with Vue 3 in Vite.
+DataGuard Task
 
-## Recommended IDE Setup
+## Description
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+DataGuard Task is a project designed to interact with the GitHub API using serverless functions. Users can filter repositories by language, creation date, and the minimum number of stars. Additionally, users can click on "Add Star" to initiate GitHub authorization, allowing them to return to their previous filtering and scrolling state, making it easy to add stars to the repositories they wish to follow. The application also features a dark theme for an enhanced user experience.
 
-## Type Support for `.vue` Imports in TS
+## Environment Variables
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+Before running the project, create a `.env` file in the root directory with the following content:
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-bun install
+```bash
+VITE_GITHUB_BASE_API_URL=https://api.github.com
+VITE_GITHUB_BASE_URL=https://github.com
+VITE_GITHUB_CLIENT_ID=Ov23lic644gCTySHEyfv
+VITE_GITHUB_SECRET=8d95d84b98a992f73193c192d105d107e38fee92
 ```
 
-### Compile and Hot-Reload for Development
+## Getting Started
 
-```sh
-bun dev
+```bash
+1. git clone https://github.com/AmarSmajlovic/data-guard.git
+
+2. cd data-guard
+
+3. npm install
+
+4. npm run build -- Running npm build instead of npm dev we want to use vercel serverless functions in localhost
+
+5. npm run preview
+
+6. application will run in localhost
+
 ```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-bun build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-bun test:unit
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-bun test:e2e:dev
-```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-bun build
-bun test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-bun lint
-```
+Also there is deployed version of app: https://data-guard-five.vercel.app/

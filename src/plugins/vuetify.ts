@@ -19,6 +19,6 @@ export const vuetify = createVuetify({
   directives,
   icons,
   theme: {
-    defaultTheme: 'dark',
+    defaultTheme: 'light',
   },
 })
