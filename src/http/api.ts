@@ -1,4 +1,4 @@
-import config from '@/config'
+import config from 'config'
 import type { FetchResponse } from '@/types/client'
 import type { Filters, RepositoriesResponse } from '@/types/repositories'
 import { formatDate } from '@/utils/date'

@@ -1,14 +1,15 @@
 import axios from 'axios'
+import config from '../config'
 
 export default async function handler(req, res) {
   const { code } = req.query
-  const clientId = 'Ov23liu77XGEEac2QoSR'
-  const clientSecret = 'ceb925f1aa234c4e2fd5513deb73ad6aa87b5d32'
+  const clientId = config.GITHUB_CLIENT_ID
+  const clientSecret = config.GITHUB_SECRET
 
   if (req.method === 'GET' && code) {
     try {
       const response = await axios.post(
-        'https://github.com/login/oauth/access_token',
+        `${config.GITHUB_BASE_URL}/login/oauth/access_token`,
         null,
         {
           params: {
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
       )
 
       res.redirect(
-        `https://data-guard-five.vercel.app/?access_token=${response.data.access_token}`,
+        `${req.headers.origin}/?access_token=${response.data.access_token}`,
       )
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
