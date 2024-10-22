@@ -46,7 +46,7 @@
       </v-btn>
     </v-card-actions>
   </v-card>
-  <v-snackbar v-model="snackbar.isOpen" color="success">
+  <v-snackbar v-model="snackbar.isOpen" :color="snackbar.color">
     {{ snackbar.message }}
     <v-btn color="white" @click="snackbar.isOpen = false">Close</v-btn>
   </v-snackbar>
@@ -57,7 +57,7 @@ import { checkIfStarred } from '@/http/github'
 import { useGitHubStore } from '@/stores/github'
 import { useRepositories } from '@/stores/repositories'
 import type { Repository } from '@/types/repositories'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps<{
   repo: Repository
@@ -70,16 +70,25 @@ const isAnimating = ref(false)
 const snackbar = ref({
   isOpen: false,
   message: '',
+  color: 'success',
 })
+const starred = ref(false)
 
-const handleStarClick = async () => {
-  const isStarred = await checkIfStarred(
+const checkStarredStatus = async () => {
+  starred.value = await checkIfStarred(
     props.repo.full_name,
     githubStore.accessToken,
   )
+}
 
-  if (isStarred) {
+onMounted(() => {
+  checkStarredStatus()
+})
+
+const handleStarClick = async () => {
+  if (starred.value) {
     snackbar.value.isOpen = true
+    snackbar.value.color = 'primary'
     snackbar.value.message = 'You already starred this repo.'
     return
   }
@@ -88,12 +97,14 @@ const handleStarClick = async () => {
   if (githubStore.accessToken) {
     starCount.value++
     isAnimating.value = true
+    starred.value = true // Set starred to true
 
     setTimeout(() => {
       isAnimating.value = false
     }, 300)
 
     snackbar.value.isOpen = true
+    snackbar.value.color = 'success'
     snackbar.value.message = `Congrats! You starred the ${props.repo.name} repo`
 
     const repoToUpdate = repositoriesStore.repositories.find(
