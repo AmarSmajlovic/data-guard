@@ -85,22 +85,24 @@ const handleStarClick = async () => {
   }
 
   await githubStore.starRepo(props.repo.full_name)
-  starCount.value++
-  isAnimating.value = true
+  if (githubStore.accessToken) {
+    starCount.value++
+    isAnimating.value = true
 
-  setTimeout(() => {
-    isAnimating.value = false
-  }, 300)
+    setTimeout(() => {
+      isAnimating.value = false
+    }, 300)
 
-  snackbar.value.isOpen = true
-  snackbar.value.message = `Congrats! You starred the ${props.repo.name} repo`
+    snackbar.value.isOpen = true
+    snackbar.value.message = `Congrats! You starred the ${props.repo.name} repo`
 
-  const repoToUpdate = repositoriesStore.repositories.find(
-    repo => repo.id === props.repo.id,
-  )
+    const repoToUpdate = repositoriesStore.repositories.find(
+      repo => repo.id === props.repo.id,
+    )
 
-  if (repoToUpdate) {
-    repoToUpdate.stargazers_count++
+    if (repoToUpdate) {
+      repoToUpdate.stargazers_count++
+    }
   }
 }
 </script>
