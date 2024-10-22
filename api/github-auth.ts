@@ -1,15 +1,14 @@
 import axios from 'axios'
-import config from '../config'
 
 export default async function handler(req, res) {
   const { code } = req.query
-  const clientId = config.GITHUB_CLIENT_ID
-  const clientSecret = config.GITHUB_SECRET
+  const clientId = process.env.VITE_GITHUB_CLIENT_ID
+  const clientSecret = process.env.VITE_GITHUB_SECRET
 
   if (req.method === 'GET' && code) {
     try {
       const response = await axios.post(
-        `${config.GITHUB_BASE_URL}/login/oauth/access_token`,
+        `${process.env.VITE_GITHUB_BASE_URL}/login/oauth/access_token`,
         null,
         {
           params: {
@@ -24,7 +23,7 @@ export default async function handler(req, res) {
       )
 
       res.redirect(
-        `${req.headers.origin}/?access_token=${response.data.access_token}`,
+        `${req.headers.referer}/?access_token=${response.data.access_token}`,
       )
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,4 +1,4 @@
-import config from 'config'
+import config from '@/config'
 import { getAccessToken, starRepository } from '@/http/github'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'

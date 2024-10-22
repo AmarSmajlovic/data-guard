@@ -8,6 +8,11 @@ import vercel from 'vite-plugin-vercel'
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      external: ['config'],
+    },
+  },
   plugins: [vue(), vueJsx(), vueDevTools(), vercel()],
   resolve: {
     alias: {
