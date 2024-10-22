@@ -12,7 +12,7 @@
           :key="repo.id"
           :data-id="repo.id"
         >
-          <RepoCard :repo="repo" :data-id="repo.id" />
+          <RepoCard :repo="repo" />
         </v-list-item>
       </v-list>
     </v-card-text>
@@ -48,12 +48,11 @@ const handleScroll = () => {
       if (cardRect.top >= 0 && cardRect.top <= threshold) {
         const cardId = card.getAttribute('data-id')
         if (cardId) {
-          store.languageListScroll[props.language] = cardId // Save the ID of the card
+          store.languageListScroll[props.language] = cardId
         }
       }
     })
     if (scrollTop >= (scrollHeight - clientHeight) / 2) {
-      console.log('tu sam')
       store.loadMore?.(props.language)
     }
   }
@@ -70,9 +69,9 @@ onMounted(() => {
     const cardId = parsed.languageListScroll[props.language]
 
     if (cardId) {
-      const card = container.querySelector(`[data-id="${cardId}"]`) // Find the card by ID
+      const card = container.querySelector(`[data-id="${cardId}"]`)
       if (card) {
-        card.scrollIntoView({ behavior: 'instant', block: 'start' }) // Scroll to the card smoothly
+        card.scrollIntoView({ behavior: 'instant', block: 'start' })
       }
     }
   }

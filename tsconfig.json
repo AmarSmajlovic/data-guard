@@ -15,6 +15,7 @@
     "module": "NodeNext",
     "allowSyntheticDefaultImports":true,
     "skipLibCheck": true,
-    "types":["node"]
+    "types":["node"],
+    "noImplicitAny":  false
   }
 }

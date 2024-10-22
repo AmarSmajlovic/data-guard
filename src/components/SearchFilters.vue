@@ -1,6 +1,9 @@
 <template>
   <v-card>
-    <v-card-title>Filters</v-card-title>
+    <v-card-title class="d-flex justify-space-between align-center">
+      <span>Filters</span>
+      <ChangeThemeButton />
+    </v-card-title>
     <v-form ref="inputForm">
       <v-select
         v-model="filters.language"
@@ -56,6 +59,7 @@ import { fromDateRule, toDateRule } from '@/validations/repoFilters'
 import type { VForm } from 'vuetify/components'
 import type { Filters } from '@/types/repositories'
 import { getItemFromStorage } from '@/utils/storage'
+import ChangeThemeButton from '@/components/ChangeThemeButton.vue'
 
 const store = useRepositories()
 const filters = computed(() => store.filters)
