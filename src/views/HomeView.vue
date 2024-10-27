@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0">
+  <v-container class="pa-0">
     <v-row>
       <v-col cols="12" md="3">
         <SearchFilters />

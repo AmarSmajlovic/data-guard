@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="400px">
+  <v-card class="mb-4 parent-card" max-width="400px">
     <v-card-title>
       <v-list-item-avatar size="30" class="avatar-small">
         <v-img
@@ -16,36 +16,37 @@
       </v-list-item-content>
     </v-card-title>
 
-    <v-card-subtitle class="d-flex justify-center">
+    <v-card-text>
+      <p>{{ repo.description || 'No description provided.' }}</p>
+    </v-card-text>
+
+    <v-card-subtitle>
       <transition name="scale">
         <v-icon
           :class="{ 'gold-star': isAnimating }"
           @click="handleStarClick"
           v-if="starCount >= 0"
-          >mdi-star</v-icon
         >
+          mdi-star
+        </v-icon>
       </transition>
       <span class="mx-2">{{ starCount }} Stars</span>
     </v-card-subtitle>
-    <v-card-text>
-      <p>{{ repo.description || 'No description provided.' }}</p>
-    </v-card-text>
-
-    <v-card-subtitle class="d-flex justify-center">
+    <v-card-actions class="flex flex-column">
       <v-btn
         @click="handleStarClick"
         block
-        color="primary"
+        class="custom-btn"
         append-icon="mdi-star"
-        >Add star</v-btn
       >
-    </v-card-subtitle>
-    <v-card-actions>
-      <v-btn :href="repo.html_url" target="_blank" block color="primary">
+        Add Star
+      </v-btn>
+      <v-btn :href="repo.html_url" target="_blank" block class="custom-btn">
         View on GitHub
       </v-btn>
     </v-card-actions>
   </v-card>
+
   <v-snackbar v-model="snackbar.isOpen" :color="snackbar.color">
     {{ snackbar.message }}
     <v-btn color="white" @click="snackbar.isOpen = false">Close</v-btn>
@@ -119,6 +120,17 @@ const handleStarClick = async () => {
 </script>
 
 <style scoped>
+.parent-card {
+  box-shadow: none;
+  padding: 0 !important;
+}
+
+.v-card {
+  box-shadow: 0 4px 8px var(--v-surface-base);
+  border-radius: 4px;
+  margin-bottom: 0;
+}
+
 .gold-star {
   color: gold;
 }
@@ -131,5 +143,21 @@ const handleStarClick = async () => {
 .scale-enter,
 .scale-leave-to {
   transform: scale(1.7);
+}
+
+.v-list-item {
+  padding: 0 !important;
+}
+
+.custom-btn {
+  width: 100%;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.custom-btn:hover {
+  background-color: #155a8a;
 }
 </style>

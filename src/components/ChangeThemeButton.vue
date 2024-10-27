@@ -6,7 +6,6 @@
     @click="toggleTheme"
   >
     <i
-      @click="toggleTheme"
       :class="theme.global.current.value.dark ? 'fas fa-sun' : 'fas fa-moon'"
     ></i>
   </v-btn>

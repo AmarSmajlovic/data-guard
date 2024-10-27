@@ -1,6 +1,6 @@
 <template>
-  <v-card>
-    <v-card-title>GitHub repositories</v-card-title>
+  <v-card class="container-repos">
+    <v-card-title class="font-weight-black">GitHub repositories</v-card-title>
     <v-card-text>
       <p>
         Between
@@ -59,4 +59,9 @@ const loading = computed(() => store.loading)
 const error = computed(() => store.error)
 </script>
 
-<style scoped></style>
+<style scoped>
+.container-repos {
+  min-height: 100vh !important;
+  padding: 15px 20px 20px 20px;
+}
+</style>

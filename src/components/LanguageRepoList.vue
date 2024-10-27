@@ -1,5 +1,9 @@
 <template>
-  <v-card class="mb-4 card-with-fade">
+  <v-card
+    class="mb-4 card-with-fade hover-card"
+    @mouseover="hover = true"
+    @mouseleave="hover = false"
+  >
     <v-card-title>{{ props.language }}</v-card-title>
     <v-card-text
       class="scrollable-content"
@@ -11,6 +15,7 @@
           v-for="repo in props.repositories"
           :key="repo.id"
           :data-id="repo.id"
+          class="item-card"
         >
           <RepoCard :repo="repo" />
         </v-list-item>
@@ -20,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, onMounted } from 'vue'
+import { defineProps, onMounted, ref } from 'vue'
 import RepoCard from '@/components/RepoCard.vue'
 import type { Repository } from '@/types/repositories'
 import { useRepositories } from '@/stores/repositories'
@@ -33,6 +38,7 @@ const props = defineProps<{
 }>()
 
 const store = useRepositories()
+const hover = ref(false)
 
 const handleScroll = () => {
   const container = document.querySelector(
@@ -82,6 +88,29 @@ onMounted(() => {
 .card-with-fade {
   position: relative;
   overflow: hidden;
+  border: none;
+  border-radius: 8px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.v-theme--light .card-with-fade {
+  box-shadow: 0 4px 8px rgba(51, 51, 51, 0.2);
+}
+
+.v-theme--dark .card-with-fade {
+  box-shadow: 0 4px 8px rgba(245, 245, 245, 0.2);
+}
+
+.v-theme--light .card-with-fade:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(51, 51, 51, 0.3);
+}
+
+.v-theme--dark .card-with-fade:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(245, 245, 245, 0.3);
 }
 
 .scrollable-content {
@@ -99,5 +128,9 @@ onMounted(() => {
   height: 40px;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
   pointer-events: none;
+}
+
+.item-card {
+  padding: 0px !important;
 }
 </style>
